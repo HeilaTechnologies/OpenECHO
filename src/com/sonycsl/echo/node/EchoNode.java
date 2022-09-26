@@ -32,6 +32,19 @@ public final class EchoNode {
 	private List<DeviceObject> mDevices = new ArrayList<DeviceObject>();
 	private String mAddress;
 	
+	public EchoNode(NodeProfile nodeProfile, DeviceObject[] devices, String address) {
+		// selfNode
+		mAddress = address;
+		mNodeProfile = nodeProfile;
+		for(DeviceObject d : devices) {
+			if(isSelfNode()) {
+				d.allocateSelfDeviceInstanceCode();
+			}
+			mDevices.add(d);
+		}
+		
+	}
+
 	public EchoNode(NodeProfile nodeProfile, DeviceObject[] devices) {
 		// selfNode
 		mAddress = EchoSocket.SELF_ADDRESS;

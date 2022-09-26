@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.InetAddress;
+import java.net.Inet4Address;
 import java.util.Enumeration;
 
 public class EchoUDPProtocol extends EchoProtocol {
@@ -42,6 +44,14 @@ public class EchoUDPProtocol extends EchoProtocol {
         mMulticastSocket.joinGroup(mMulticastAddress);
         mMulticastSocket.setLoopbackMode(true);
         mMulticastSocket.setSoTimeout(0);
+        Enumeration<InetAddress> addresses = nwif.getInetAddresses();
+        while(addresses.hasMoreElements()) {
+            InetAddress addr = addresses.nextElement();
+		        if (addr instanceof Inet4Address) {
+			          mMulticastSocket.setInterface(addr);
+			          break;
+		        }
+        }
     }
 
     public void closeUDP() {

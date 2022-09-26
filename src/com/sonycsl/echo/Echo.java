@@ -127,6 +127,26 @@ public final class Echo {
     }
 
     public synchronized static EchoNode start(NodeProfile profile, DeviceObject[] devices,
+            NetworkInterface nwif, String address) throws IOException {
+        if (sStarted)
+            return null;
+        if (!sCleared)
+            return null;
+
+        sStarted = true;
+        sCleared = false;
+
+        sSelfNode = new EchoNode(profile, devices, address);
+        profile.setNode(sSelfNode);
+        for (DeviceObject dev : devices) {
+            dev.setNode(sSelfNode);
+        }
+        EchoSocket.openSocket(nwif);
+
+        return postOpenSocket(devices);
+    }
+
+    public synchronized static EchoNode start(NodeProfile profile, DeviceObject[] devices,
             NetworkInterface nwif) throws IOException {
         if (sStarted)
             return null;
